@@ -34,12 +34,12 @@ class PDF extends FPDF
             $this->Cell(40,7,$col,1);
         $this->Ln();
         // Data
-       foreach($data as $row)
+       /*foreach($data as $row)
         {
             foreach($row as $col)
                 $this->Cell(40,6,$col,1);
             $this->Ln();
-        }
+        }*/
     }
 
 }
