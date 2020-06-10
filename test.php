@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 require('fpdf.php');
 
 class PDF extends FPDF
@@ -225,4 +226,7 @@ $pdf->BasicTable($header, $data);
 
 
 $pdf->Output();
+=======
+print_r($_POST);
+>>>>>>> af09cb27a33e2231c14b96ee155e31c296513c44
 ?>

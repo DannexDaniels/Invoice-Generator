@@ -27,10 +27,17 @@
 <div class="container">
 
     <script>
+<<<<<<< HEAD
 	var counter = 1;
 
         function addrow() {
 	var section = document.getElementById("additional");
+=======
+        var counter = 1;
+
+        function addrow() {
+            var section = document.getElementById("additional");
+>>>>>>> af09cb27a33e2231c14b96ee155e31c296513c44
             var divrow = document.createElement("div");
             counter++;
             divrow.innerHTML = "<div class=\"row\">\n" +
