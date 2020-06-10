@@ -10,7 +10,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Invoice Generator</title>
 
     <style>
         body{
@@ -26,46 +26,83 @@
 
 <div class="container">
 
-    <form action="create_invoice.php" method="post">
+    <script>
+	var counter = 1;
+
+        function addrow() {
+	var section = document.getElementById("additional");
+            var divrow = document.createElement("div");
+            counter++;
+            divrow.innerHTML = "<div class=\"row\">\n" +
+                "            <div class=\"col-lg-2\">\n" +
+                "                <label for=\"item\">Item</label>\n" +
+                "                <input type=\"text\" class=\"form-control\" name=\"item"+counter+"\">\n" +
+                "            </div>\n" +
+                "            <div class=\"col-lg-4\">\n" +
+                "                <label for=\"description\">Description</label>\n" +
+                "                <input type=\"text\" class=\"form-control\" name=\"description"+counter+"\">\n" +
+                "            </div>\n" +
+                "            <div class=\"col-lg-2\">\n" +
+                "                <label for=\"quantity\">Quantity</label>\n" +
+                "                <input type=\"text\" class=\"form-control\" name=\"quantity"+counter+"\">\n" +
+                "            </div>\n" +
+                "            <div class=\"col-lg-2\">\n" +
+                "                <label for=\"rate\">Rate</label>\n" +
+                "                <input type=\"text\" class=\"form-control\" name=\"rate"+counter+"\">\n" +
+                "            </div>\n" +
+                "            <div class=\"col-lg-2\">\n" +
+                "                <label for=\"amount\">Amount</label>\n" +
+                "                <input type=\"text\" class=\"form-control\" name=\"amount"+counter+"\">\n" +
+                "            </div>\n" +
+                "\n" +
+                "        </div>";
+            section.appendChild(divrow);
+        }
+    </script>
+
+    <form action="create_invoice.php" method="POST">
 
         <div class="row">
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="bill_to">Bill To</label>
-                    <textarea class="form-control" id="bill_to" rows="3"></textarea>
+                    <textarea class="form-control" name="bill_to" rows="3"></textarea>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="desc_inv_no">Description and Invoice Number</label>
-                    <textarea class="form-control" id="desc_inv_no" rows="3"></textarea>
+                    <textarea class="form-control" name="desc_inv_no" rows="3"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-2">
                 <label for="item">Item</label>
-                <input type="text" class="form-control" id="item">
+                <input type="text" class="form-control" name="item">
             </div>
             <div class="col-lg-4">
                 <label for="description">Description</label>
-                <input type="text" class="form-control" id="description">
+                <input type="text" class="form-control" name="description">
             </div>
             <div class="col-lg-2">
                 <label for="quantity">Quantity</label>
-                <input type="text" class="form-control" id="quantity">
+                <input type="text" class="form-control" name="quantity">
             </div>
             <div class="col-lg-2">
                 <label for="rate">Rate</label>
-                <input type="text" class="form-control" id="rate">
+                <input type="text" class="form-control" name="rate">
             </div>
             <div class="col-lg-2">
                 <label for="amount">Amount</label>
-                <input type="text" class="form-control" id="amount">
+                <input type="text" class="form-control" name="amount">
             </div>
 
         </div>
-        <button type="button" class="btn btn-primary" >Add Item</button>
+        <div id="additional">
+
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addrow()">Add Item</button>
         <br /><br /><br />
 
 
