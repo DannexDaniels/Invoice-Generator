@@ -43,7 +43,7 @@ class PDF extends FPDF
 
     function Row($data)
     {
-        
+
         //Calculate the height of the row
         $nb=0;
         for($i=1; $i <= sizeof($data); ++$i){
@@ -71,11 +71,11 @@ class PDF extends FPDF
                 $this->SetXY($x+$w,$y);
             }else{
                 //Draw the border
-            $this->Rect($x,$y,95,40);
-            //Print the text
-            $this->MultiCell(95,8,$data[$i],0,$a);
-            //Put the position to the right of the cell
-            $this->SetXY($x+95,$y);
+                $this->Rect($x,$y,95,40);
+                //Print the text
+                $this->MultiCell(95,8,$data[$i],0,$a);
+                //Put the position to the right of the cell
+                $this->SetXY($x+95,$y);
             }
         }
         //Go to the next line
@@ -84,7 +84,7 @@ class PDF extends FPDF
         }else{
             $this->Ln(50);
         }
-        
+
     }
 
     function CheckPageBreak($h)
@@ -165,64 +165,94 @@ class PDF extends FPDF
 
         $columns = 5;
         $row = (sizeof($data) - 2)/$columns;
+
+        //print_r("rows are: ".$row);
         for($r = 1; $r <= $row; $r++){
             for($c = 1; $c <= $columns; $c++){
-                if($r == 1){
-                   switch ($c) {
-                        case 1:
-                            $table[$r][$c] = $data['item'];
-                            break;
-                        case 2:
-                            $table[$r][$c] = $data['description'];
-                            //$height = $this->GetMultiCellHeight(95, 8, $data['description'], 1);
-                            break;
-                        case 3:
-                            $table[$r][$c] = $data['quantity'];
-                            break;
-                        case 4:
-                            $table[$r][$c] = $data['rate'];
-                            break;
-                        case 5:
-                            $table[$r][$c] = $data['amount'];
-                            break;
-
-                    }
-                }else{
-                    switch ($c) {
-                        case 1:
-                            $table[$r][$c] = $data['item'.$r];
-                            break;
-                        case 2:
-                            $table[$r][$c] = $data['description'.$r];
-                            /*if ($height < $this->GetMultiCellHeight(95, 8, $data['description'.$r], 1)) {
-                                $height = $this->GetMultiCellHeight(95, 8, $data['description'.$r], 1);
-                            }*/
-                            break;
-                        case 3:
-                            $table[$r][$c] = $data['quantity'.$r];
-                            break;
-                        case 4:
-                            $table[$r][$c] = $data['rate'.$r];
-                            break;
-                        case 5:
-                            $table[$r][$c] = $data['amount'.$r];
-                            break;
-
-                    }
+                switch ($c) {
+                    case 1:
+                        $table[$r][$c] = $data['item'.$r];
+                        break;
+                    case 2:
+                        $table[$r][$c] = $data['description'.$r];
+                        /*if ($height < $this->GetMultiCellHeight(95, 8, $data['description'.$r], 1)) {
+                            $height = $this->GetMultiCellHeight(95, 8, $data['description'.$r], 1);
+                        }*/
+                        break;
+                    case 3:
+                        $table[$r][$c] = $data['quantity'.$r];
+                        break;
+                    case 4:
+                        $table[$r][$c] = $data['rate'.$r];
+                        break;
+                    case 5:
+                        $table[$r][$c] = $data['amount'.$r];
+                        break;
                 }
             }
         }
 
+        //print_r(sizeof($table));
+        $items = sizeof($table);
+        $subTotal = 0;
+        foreach($table as $amount){
+            //print_r($amount);
+
+            $subTotal += $amount[5];
+        }
+
+        $vat = $subTotal * 0.16;
+        $total = $subTotal + $vat;
+
+        for($r = $items+1; $r <= $items+4; $r++){
+            switch($r){
+                case $items+1:
+                    $table[$r][1] = "";
+                    $table[$r][2] = "";
+                    $table[$r][3] = "";
+                    $table[$r][4] = "";
+                    $table[$r][5] = "";
+                    break;
+                case $items+2:
+                    $table[$r][1] = "";
+                    $table[$r][2] = "Sub-Total";
+                    $table[$r][3] = "";
+                    $table[$r][4] = "";
+                    $table[$r][5] = $subTotal;
+                    break;
+                case $items+3:
+                    $table[$r][1] = "";
+                    $table[$r][2] = "VAT";
+                    $table[$r][3] = "";
+                    $table[$r][4] = "";
+                    $table[$r][5] = $vat;
+                    break;
+                case $items+4:
+                    $table[$r][1] = "";
+                    $table[$r][2] = "Total";
+                    $table[$r][3] = "";
+                    $table[$r][4] = "";
+                    $table[$r][5] = $total;
+                    break;
+            }
+        }
+        //print_r($total);
+
+
+        foreach($table as $amount){
+            //print_r($amount);
+        }
         foreach($table as $rows){
+
             $this->Row($rows);
         }
         // Data
-       /*foreach($data as $row)
-        {
-            foreach($row as $col)
-                $this->Cell(40,6,$col,1);
-            $this->Ln();
-        }*/
+        /*foreach($data as $row)
+         {
+             foreach($row as $col)
+                 $this->Cell(40,6,$col,1);
+             $this->Ln();
+         }*/
     }
 }
 

@@ -34,71 +34,82 @@
             var section = document.getElementById("additional");
             var divrow = document.createElement("div");
             counter++;
-            divrow.innerHTML = "<div class=\"row\">\n" +
-                "            <div class=\"col-lg-2\">\n" +
+            divrow.innerHTML = "<div id=\"div"+counter+"\"><div class=\"row\">\n" +
+                "            <div class=\"col-sm-1\">\n" +
                 "                <label for=\"item\">Item</label>\n" +
                 "                <input type=\"text\" class=\"form-control\" name=\"item"+counter+"\">\n" +
                 "            </div>\n" +
-                "            <div class=\"col-lg-4\">\n" +
+                "            <div class=\"col-sm-4\">\n" +
                 "                <label for=\"description\">Description</label>\n" +
                 "                <input type=\"text\" class=\"form-control\" name=\"description"+counter+"\">\n" +
                 "            </div>\n" +
-                "            <div class=\"col-lg-2\">\n" +
+                "            <div class=\"col-sm-2\">\n" +
                 "                <label for=\"quantity\">Quantity</label>\n" +
                 "                <input type=\"text\" class=\"form-control\" name=\"quantity"+counter+"\">\n" +
                 "            </div>\n" +
-                "            <div class=\"col-lg-2\">\n" +
+                "            <div class=\"col-sm-2\">\n" +
                 "                <label for=\"rate\">Rate</label>\n" +
                 "                <input type=\"text\" class=\"form-control\" name=\"rate"+counter+"\">\n" +
                 "            </div>\n" +
-                "            <div class=\"col-lg-2\">\n" +
+                "            <div class=\"col-sm-2\">\n" +
                 "                <label for=\"amount\">Amount</label>\n" +
                 "                <input type=\"text\" class=\"form-control\" name=\"amount"+counter+"\">\n" +
                 "            </div>\n" +
+                "            <div class=\"col-lg-1\">\n"+
+                "               <br />\n"+
+                "               <img src=\"https://img.icons8.com/fluent/48/000000/delete-sign.png\" class=\"div"+counter+"\" onclick=\"deleterow(this)\"/>\n"+
+                "            </div>\n"+
                 "\n" +
-                "        </div>";
+                "        </div></div>";
             section.appendChild(divrow);
+        }
+
+        function deleterow(row) {
+            var div = document.getElementById(row.className);
+            div.parentNode.removeChild(div);
+
+            alert("Delete"+row.className);
+
         }
     </script>
 
     <form action="create_invoice.php" method="POST">
 
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-sm-6">
                 <div class="form-group">
                     <label for="bill_to">Bill To</label>
                     <textarea class="form-control" name="bill_to" rows="3"></textarea>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="desc_inv_no">Description and Invoice Number</label>
+                    <label for="desc_inv_no">Description</label>
                     <textarea class="form-control" name="desc_inv_no" rows="3"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-2">
-                <label for="item">Item</label>
-                <input type="text" class="form-control" name="item">
+            <div class="col-sm-1">
+                <label for="item1">Item</label>
+                <input type="text" class="form-control" name="item1">
             </div>
-            <div class="col-lg-4">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" name="description">
+            <div class="col-sm-4">
+                <label for="description1">Description</label>
+                <input type="text" class="form-control" name="description1">
             </div>
-            <div class="col-lg-2">
-                <label for="quantity">Quantity</label>
-                <input type="text" class="form-control" name="quantity">
+            <div class="col-sm-2">
+                <label for="quantity1">Quantity</label>
+                <input type="text" class="form-control" name="quantity1">
             </div>
-            <div class="col-lg-2">
-                <label for="rate">Rate</label>
-                <input type="text" class="form-control" name="rate">
+            <div class="col-sm-2">
+                <label for="rate1">Rate</label>
+                <input type="text" class="form-control" name="rate1">
             </div>
-            <div class="col-lg-2">
-                <label for="amount">Amount</label>
-                <input type="text" class="form-control" name="amount">
+            <div class="col-sm-2">
+                <label for="amount1">Amount</label>
+                <input type="text" class="form-control" name="amount1">
             </div>
-
         </div>
         <div id="additional">
 
