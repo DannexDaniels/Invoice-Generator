@@ -9,21 +9,42 @@ class PDF extends FPDF
     function Header()
     {
         // Logo
-        $this->Image('logo.jpg',80,30, 60);
+        $this->Image('logo.jpg',80,20, 60);
+
+        $this->Ln(30);
+        $this->setFont("Arial",'',10);
+        $this->cell(0, 60,"Gateway House Kenyatta Avenue Third Floor | P.O.Box 4089 Thika",0,0,'C');
+        $this->Ln(1);
+        $this->cell(0, 67,'TEL: +254726224968, +254726736198 | EMAIL: info@marc.co.ke',0,0,'C');
+        $this->Ln(10);
+        $this->SetTextColor(30,144,255);
+        $this->SetFont("Arial", 'B', 20);
+        $this->Cell(0,80,"INVOICE",0,0,'C');
+        $this->SetFont("Arial", "B", 12);
+        $this->Ln(1);
+        $this->Cell(0,90,"Invoice No: 12345",0,0,'L');
+        $this->Cell(0,90,"PIN No: P051414752C",0,0,'R');
 
         // Line break
-        $this->Ln(20);
+        //$this->Ln();
     }
 
 // Page footer
     function Footer()
     {
         // Position at 1.5 cm from bottom
-        $this->SetY(-15);
+        $this->SetY(-40);
+        $this->Image('footer.png',20,null, 0,0);
+        $this->Ln();
         // Arial italic 8
-        $this->SetFont('Arial','I',8);
+        $this->SetFont('Arial','B',10);
+        $this->SetTextColor(128,128,128);
         // Page number
-        $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+
+        $this->MultiCell(0,4,'Accounts to be settle by CROSSED CHEQUE / BANK RTGS only in favor of Marc Construction Works Limited Account NO: 1168971586. Kenya Commercial Bank, Thika Branch');
+        $this->Ln();
+        $this->Cell(0,5,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+
     }
 
     var $widths;
@@ -149,7 +170,6 @@ class PDF extends FPDF
     function BasicTable($header, $data)
     {
         $sss = array(1=>$data['bill_to'],2=>$data['desc_inv_no']);
-        //print_r($sss);
         $this->Row($sss);
 
         $wid = array(13,90,20,35,35);
@@ -161,12 +181,10 @@ class PDF extends FPDF
         }
         $this->Ln();
 
-        //print_r($data);
 
         $columns = 5;
         $row = (sizeof($data) - 2)/$columns;
 
-        //print_r("rows are: ".$row);
         for($r = 1; $r <= $row; $r++){
             for($c = 1; $c <= $columns; $c++){
                 switch ($c) {
@@ -192,42 +210,40 @@ class PDF extends FPDF
             }
         }
 
-        //print_r(sizeof($table));
+
         $items = sizeof($table);
         $subTotal = 0;
         foreach($table as $amount){
-            //print_r($amount);
-
             $subTotal += $amount[5];
         }
 
         $vat = $subTotal * 0.16;
         $total = $subTotal + $vat;
 
-        for($r = $items+1; $r <= $items+4; $r++){
-            switch($r){
-                case $items+1:
+        for($r = $items+1; $r <= $items+4; $r++) {
+            switch ($r) {
+                case $items + 1:
                     $table[$r][1] = "";
                     $table[$r][2] = "";
                     $table[$r][3] = "";
                     $table[$r][4] = "";
                     $table[$r][5] = "";
                     break;
-                case $items+2:
+                case $items + 2:
                     $table[$r][1] = "";
                     $table[$r][2] = "Sub-Total";
                     $table[$r][3] = "";
                     $table[$r][4] = "";
                     $table[$r][5] = $subTotal;
                     break;
-                case $items+3:
+                case $items + 3:
                     $table[$r][1] = "";
                     $table[$r][2] = "VAT";
                     $table[$r][3] = "";
                     $table[$r][4] = "";
                     $table[$r][5] = $vat;
                     break;
-                case $items+4:
+                case $items + 4:
                     $table[$r][1] = "";
                     $table[$r][2] = "Total";
                     $table[$r][3] = "";
@@ -236,11 +252,9 @@ class PDF extends FPDF
                     break;
             }
         }
-        //print_r($total);
 
 
         foreach($table as $amount){
-            //print_r($amount);
         }
         foreach($table as $rows){
 
@@ -270,9 +284,10 @@ $pdf->SetWidths(array(13,90,20,35,35));
 // Data to load in the table
 $data = $_POST;
 
-$pdf->Ln(60);
+$pdf->Ln(50);
 //loading the table
 $pdf->BasicTable($header, $data);
+
 
 //Display output
 $pdf->Output();
