@@ -5,6 +5,7 @@ header("Content-Encoding: None", true);
 
 class PDF extends FPDF
 {
+
 // Page header
     function Header()
     {
@@ -22,7 +23,7 @@ class PDF extends FPDF
         $this->Cell(0,80,"INVOICE",0,0,'C');
         $this->SetFont("Arial", "B", 12);
         $this->Ln(1);
-        $this->Cell(0,90,"Invoice No: 12345",0,0,'L');
+        $this->Cell(0,90,"Invoice No: ".$this->invoiceNo,0,0,'L');
         $this->Cell(0,90,"PIN No: P051414752C",0,0,'R');
 
         // Line break
@@ -50,6 +51,12 @@ class PDF extends FPDF
     var $widths;
     var $aligns;
 
+    var $invoiceNo;
+
+
+    function SetInvoiceNo($no){
+        $this->invoiceNo = $no;
+    }
     function SetWidths($w)
     {
         //Set the array of column widths
@@ -268,10 +275,37 @@ class PDF extends FPDF
              $this->Ln();
          }*/
     }
+
+    function saveInvoice($invoice){
+        $sql = "INSERT INTO invoice (invoiceNo, billTo, description, invoicePath) VALUES ('".$invoice['invoiceNo']."', '".$invoice['bill_to']."', '".$invoice['desc_inv_no']."', 'invoices/".$invoice['invoiceNo'].".pdf')";
+
+        $host_name = "127.0.0.1";
+        $db_username = "root";
+        $db_password = "";
+        $db_name = "invoice_geneator";
+
+        $connect = mysqli_connect($host_name, $db_username, $db_password, $db_name);
+
+
+        if (!$connect) {
+            echo "<script>alert('Could not connect to the database');</script>";
+            exit;
+        }
+
+        if(mysqli_query($connect,$sql)):
+           // echo "<script>alert('Invoice Saved Successfully')</script>";
+        endif;
+    }
 }
 
 // Instanciation of inherited class
 $pdf = new PDF();
+
+//generate a random number
+$inNo = rand(1000,10000);
+
+$pdf->SetInvoiceNo($inNo);
+
 //set page number
 $pdf->AliasNbPages();
 $pdf->AddPage();
@@ -284,11 +318,16 @@ $pdf->SetWidths(array(13,90,20,35,35));
 // Data to load in the table
 $data = $_POST;
 
+$data['invoiceNo'] = $inNo;
+
+$pdf->saveInvoice($data);
+
 $pdf->Ln(50);
 //loading the table
 $pdf->BasicTable($header, $data);
 
-
 //Display output
+$filename="/home/dannexte/public_html/InvoiceGenerator/invoices/test.pdf";
+$pdf->Output($filename,'F');
 $pdf->Output();
 ?>

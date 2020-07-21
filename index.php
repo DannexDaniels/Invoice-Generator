@@ -85,7 +85,7 @@
             }
 
             if (amountValue == "" || rateValue == "" || quantity == ""){
-                alert("Fill all the fields above first");
+                alert("Fill all the fields first");
             }else {
                 console.log("amount: "+amountValue+" Rate: "+rateValue);
                 document.getElementById(amountValue).value = document.getElementById(quantityValue).value * document.getElementById(rateValue).value;
@@ -94,7 +94,8 @@
 
         function submitData(e) {
             setAmount()
-            if(!confirm('Do you want to proceed?'))e.preventDefault();
+
+            if(amountValue != "" && !confirm('Do you want to proceed?'))e.preventDefault();
         }
     </script>
 
