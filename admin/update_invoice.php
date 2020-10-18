@@ -102,9 +102,213 @@
             </nav>
             <!-- End of Topbar -->
 
+            <script>
+                var addRowClick = 0;
+                 function setAmount(amount = '0',rate = '0', quantity = '0') {
+                    if (amount!='0' || rate!='0' || quantity!=0){
+                        amountValue = amount;
+                        rateValue = rate;
+                        quantityValue = quantity;
+                    }
+
+                    if (amountValue == "" || rateValue == "" || quantity == ""){
+                        alert("Fill all the fields above first");
+                    }else {
+                        console.log("amount: "+amountValue+" Rate: "+rateValue);
+                        document.getElementById(amountValue).value = document.getElementById(quantityValue).value * document.getElementById(rateValue).value;
+                    }
+                }
+
+                function deleterow(row) {
+                    if(confirm('Are you sure you want to delete?')){
+                        var div = document.getElementById(row.className);
+                        div.parentNode.removeChild(div);
+                    }
+
+                }
+
+                function addrow(counter) {
+                    counter = Number(counter) + Number(addRowClick);
+                    
+                    
+                    var section = document.getElementById("additional");
+                    var divrow = document.createElement("div");
+                    
+                    divrow.innerHTML = "<div id=\"div"+counter+"\"><div class=\"row\" required>\n" +
+                        "            <div class=\"col-sm-1\">\n" +
+                        "                <label for=\"item\">Item</label>\n" +
+                        "                <input type=\"text\" class=\"form-control\" name=\"item"+counter+"\" required value="+counter+">\n" +
+                        "            </div>\n" +
+                        "            <div class=\"col-sm-4\">\n" +
+                        "                <label for=\"description\">Description</label>\n" +
+                        "                <input type=\"text\" class=\"form-control\" name=\"description"+counter+"\" required>\n" +
+                        "            </div>\n" +
+                        "            <div class=\"col-sm-2\">\n" +
+                        "                <label for=\"quantity\">Quantity</label>\n" +
+                        "                <input type=\"text\" class=\"form-control\" name=\"quantity"+counter+"\" id=\"quantity"+counter+"\" required>\n" +
+                        "            </div>\n" +
+                        "            <div class=\"col-sm-2\">\n" +
+                        "                <label for=\"rate\">Rate</label>\n" +
+                        "                <input type=\"text\" class=\"form-control\" name=\"rate"+counter+"\" id=\"rate"+counter+"\" onkeydown=\"setAmount('amount"+counter+"','rate"+counter+"', 'quantity"+counter+"')\" required>\n" +
+                        "            </div>\n" +
+                        "            <div class=\"col-sm-2\">\n" +
+                        "                <label for=\"amount\">Amount</label>\n" +
+                        "                <input type=\"text\" class=\"form-control\" name=\"amount"+counter+"\" id=\"amount"+counter+"\" required readonly>\n" +
+                        "            </div>\n" +
+                        "            <div class=\"col-sm-1\">\n"+
+                        "               <br />\n"+
+                        "               <img src=\"https://img.icons8.com/fluent/48/000000/delete-sign.png\" class=\"div"+counter+"\" onclick=\"deleterow(this)\"/>\n"+
+                        "            </div>\n"+
+                        "\n" +
+                        "        </div></div>";
+                    section.appendChild(divrow);
+                    setAmount();
+                    addRowClick++;
+                }
+
+                function submitData(e) {
+                    setAmount()
+                    if(!confirm('Do you want to proceed?'))e.preventDefault();
+                }
+            </script>
+
+            <?php
+                // $host_name = "localhost";
+                // $db_username = "dannexte_root";
+                // $db_password = "BitifyPro@2020";
+                // $db_name = "dannexte_invoices";
+                $host_name = "localhost";
+                $db_username = "root";
+                $db_password = "";
+                $db_name = "invoice_generator";
+
+                $connect = mysqli_connect($host_name, $db_username, $db_password, $db_name);
+
+
+                if (!$connect) {
+                    echo "<script>alert('Could not connect to the database');</script>";
+                    exit;
+                }
+
+            ?>
+
+
+
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <h1>Coming Soon <i class="fa fa-smile-wink"></i></h1>
+                <div class="row">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-6">
+                        <form action="" method="post" class="user">
+                            <div class="form-group">
+                                <input type="tel" name="invoice_no" id="invoice_no" class="form-control form-control-user" placeholder="Enter Invoice Number" required>
+                            </div>
+                                <input type="submit" name="search_invoice" class="btn btn-primary btn-user btn-block" value="Search Invoice"/>
+                        </form>
+                    </div>
+                    <div class="col-sm-3">
+                    </div>
+                </div>
+
+                <form action="../create_invoice.php" method="POST">
+
+                <?php 
+                    //beginning of condition
+                    if(isset($_POST['search_invoice'])){ //check if form was submitted
+                        $invoice = $_POST['invoice_no']; //get input text
+                        
+                        $sql_items = "SELECT * FROM items WHERE itemInvoiceNo = '".$invoice."'";
+                        $sql_invoice = "SELECT * FROM invoice WHERE invoiceNo = '".$invoice."'";
+
+                        $result_items = mysqli_query($connect, $sql_items);
+                        
+                        $result_invoice = mysqli_query($connect, $sql_invoice);
+
+                        while($invoice = mysqli_fetch_array($result_invoice, MYSQLI_ASSOC)) {
+                        ?>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" >
+                                    <label for="bill_to">Bill To</label>
+                                    <textarea class="form-control" name="bill_to" rows="3" required ><?php echo $invoice['billTo'];?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="desc_inv_no">Description</label>
+                                    <textarea class="form-control" name="desc_inv_no" rows="3" required><?php echo $invoice['description'];?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        }//end of loop 
+                            $counter = 1;
+                            while($items = mysqli_fetch_array($result_items, MYSQLI_ASSOC)) {
+                                
+                        ?>
+                        <div class="row" id="<?php echo 'div'.$counter ?>">
+                            <div class="col-sm-1">
+                                <label for="item1">Item</label>
+                                <input type="text" class="form-control" name="<?php echo 'item'.$counter?>" value="<?php echo $items['itemNo'];?>" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="description1">Description</label>
+                                <input type="text" class="form-control" name="<?php echo 'description'.$counter?>" value="<?php echo $items['itemDescription'];?>" required>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="quantity1">Quantity</label>
+                                <input type="text" class="form-control" name="<?php echo 'quantity'.$counter?>" id="<?php echo 'quantity'.$counter?>" value="<?php echo $items['itemQuantity'];?>" required>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="rate1">Rate</label>
+                                <input type="text" class="form-control" name="<?php echo 'rate'.$counter?>" id="<?php echo 'rate'.$counter?>" value="<?php echo $items['itemRate'];?>" required onkeydown="setAmount('<?php echo 'amount'.$counter?>','<?php echo 'rate'.$counter?>','<?php echo 'quantity'.$counter?>')">
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="amount1">Amount</label>
+                                <input type="text" class="form-control" name="<?php echo 'amount'.$counter?>" id="<?php echo 'amount'.$counter?>" required readonly value="<?php echo $items['itemRate']*$items['itemQuantity'];?>">
+                            </div>
+                            <div class="col-sm-1">
+                               <br />
+                               <img src="https://img.icons8.com/fluent/48/000000/delete-sign.png" class="<?php echo 'div'.$counter?>" onclick="deleterow(this)"/>
+                            </div>
+                        </div>
+                        
+                        <?php
+                            $counter++;
+                            }//end of loop
+                            $result_invoice = mysqli_query($connect, $sql_invoice);
+                            $invoice_result = mysqli_fetch_assoc($result_invoice);
+                            ?>
+                            
+                            <input type=text value="update" name="invoice_type" hidden/>
+                            <input type=text value="<?php echo $invoice_result['invoiceNo'];?>" name="invoice_no" hidden/>
+                            <div id="additional"></div>
+                            <button type="button" class="btn btn-primary" onclick="addrow('<?php echo $counter?>')">Add Item</button>
+                            <br /><br /><br />
+                            <button type="submit" class="btn btn-primary" id="submit" onclick="submitData(event)">Update Invoice</button>
+                </form>
+                            <?php
+                    } //end of condition
+                    mysqli_close($connect);
+                ?>
+                    
+                    
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+                
             </div>
             <!-- /.container-fluid -->
 

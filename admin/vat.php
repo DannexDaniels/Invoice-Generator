@@ -102,9 +102,60 @@
             </nav>
             <!-- End of Topbar -->
 
+            <?php
+            // $host_name = "localhost";
+            // $db_username = "dannexte_root";
+            // $db_password = "BitifyPro@2020";
+            // $db_name = "dannexte_invoices";
+            $host_name = "localhost";
+            $db_username = "root";
+            $db_password = "";
+            $db_name = "invoice_generator";
+
+            $connect = mysqli_connect($host_name, $db_username, $db_password, $db_name);
+
+
+            if (!$connect) {
+                echo "<script>alert('Could not connect to the database');</script>";
+                exit;
+            }
+
+            if(isset($_POST['update_vat'])){ //check if form was submitted
+                $new_vat = $_POST['new_vat']; //get input text
+                $vat_sql = "UPDATE vat SET value = ".$new_vat." WHERE id = 1";
+                mysqli_query($connect, $vat_sql);
+                echo "<script>alert('VAT Updated Successfully');</script>";
+              } 
+
+            $sql = "SELECT value FROM vat WHERE id = 1";
+
+            $result = mysqli_query($connect, $sql);
+
+            $vat = mysqli_fetch_assoc($result);
+
+            mysqli_close($connect);
+
+        ?>
+
+
             <!-- Begin Page Content -->
             <div class="container-fluid">
-                <h1>Coming Soon <i class="fa fa-smile-wink"></i></h1>
+                <div class="row">
+                    <div class="col-lg-5">
+                        <center>
+                            <h1>Current VAT</h1>
+                            <strong><h3><?php echo $vat['value']."%";?></h3></strong>
+                        </center>
+                    </div>
+                    <div class="col-lg-7">
+                        <form action="" method="post" class="user">
+                            <div class="form-group">
+                            <input type="tel" name="new_vat" class="form-control form-control-user" placeholder="Enter Current VAT..." required>
+                            </div>
+                            <input type="submit" name="update_vat" class="btn btn-primary btn-user btn-block" value="Update Current VAT"/>
+                        </form>
+                    </div>
+                </div>
             </div>
             <!-- /.container-fluid -->
 

@@ -103,10 +103,14 @@
         <!-- End of Topbar -->
 
         <?php
-            $host_name = "127.0.0.1";
+            // $host_name = "localhost";
+            // $db_username = "dannexte_root";
+            // $db_password = "BitifyPro@2020";
+            // $db_name = "dannexte_invoices";
+            $host_name = "localhost";
             $db_username = "root";
             $db_password = "";
-            $db_name = "invoice_geneator";
+            $db_name = "invoice_generator";
 
             $connect = mysqli_connect($host_name, $db_username, $db_password, $db_name);
 
@@ -116,11 +120,9 @@
                 exit;
             }
 
-            $sql = "SELECT * FROM invoice";
+            $sql = "SELECT * FROM invoice ORDER BY datebilled DESC";
 
             $result = mysqli_query($connect, $sql);
-
-            mysqli_close($connect);
 
         ?>
 
@@ -137,7 +139,9 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Invoices Generated</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">122</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <?php echo $result->num_rows; ?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
@@ -154,7 +158,18 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Current VAT Rate</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">16%</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                      <?php
+                                        $vat_sql = "SELECT value FROM vat WHERE id = 1";
+
+                                        $vat_result = mysqli_query($connect, $vat_sql);
+                            
+                                        $vat = mysqli_fetch_assoc($vat_result);
+
+                                        echo $vat['value']."%";
+
+                                      ?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-project-diagram fa-2x text-gray-300"></i>
@@ -246,8 +261,11 @@
                         </tr>
                         <?php
                     }
+
+                    mysqli_close($connect);
                     ?>
 
+                    
                   </tbody>
                 </table>
               </div>
