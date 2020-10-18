@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="a simple invoice generator">
-    <meta name="author" content="Dannex Daniels & Doris Munga">
+    <meta name="author" content="Dannex Daniels">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -42,7 +42,7 @@
             divrow.innerHTML = "<div id=\"div"+counter+"\"><div class=\"row\" required>\n" +
                 "            <div class=\"col-sm-1\">\n" +
                 "                <label for=\"item\">Item</label>\n" +
-                "                <input type=\"text\" class=\"form-control\" name=\"item"+counter+"\" required>\n" +
+                "                <input type=\"text\" class=\"form-control\" name=\"item"+counter+"\" required value="+counter+">\n" +
                 "            </div>\n" +
                 "            <div class=\"col-sm-4\">\n" +
                 "                <label for=\"description\">Description</label>\n" +
@@ -85,7 +85,7 @@
             }
 
             if (amountValue == "" || rateValue == "" || quantity == ""){
-                alert("Fill all the fields first");
+                alert("Fill all the fields above first");
             }else {
                 console.log("amount: "+amountValue+" Rate: "+rateValue);
                 document.getElementById(amountValue).value = document.getElementById(quantityValue).value * document.getElementById(rateValue).value;
@@ -94,8 +94,7 @@
 
         function submitData(e) {
             setAmount()
-
-            if(amountValue != "" && !confirm('Do you want to proceed?'))e.preventDefault();
+            if(!confirm('Do you want to proceed?'))e.preventDefault();
         }
     </script>
 
@@ -118,7 +117,7 @@
         <div class="row">
             <div class="col-sm-1">
                 <label for="item1">Item</label>
-                <input type="text" class="form-control" name="item1" required>
+                <input type="text" class="form-control" name="item1" required value ="1">
             </div>
             <div class="col-sm-4">
                 <label for="description1">Description</label>
@@ -140,6 +139,8 @@
         <div id="additional">
 
         </div>
+        <input type=text value="new" name="invoice_type" hidden/>
+        <input type=text name="invoice_no" hidden/>
         <button type="button" class="btn btn-primary" onclick="addrow()">Add Item</button>
         <br /><br /><br />
 
